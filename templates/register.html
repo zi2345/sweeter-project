@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Register | SWEETER</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{url_for('static', filename='favicon.ico')}}"
+    />
+
+    <!-- Bulma CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
+    <!-- Font Awesome CSS -->
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+      function check_dup() {
+        let username = $("#input-username").val();
+        console.log(username);
+        if (username === "") {
+          $("#help-id")
+            .text("Enter in your id")
+            .removeClass("is-safe")
+            .addClass("is-danger");
+          $("#input-username").focus();
+          return;
+        }
+        if (!is_nickname(username)) {
+          $("#help-id")
+            .text(
+              "Please check your id. For your id, please enter 2-10 English characters, numbers, or the following special characters (._-)"
+            )
+            .removeClass("is-safe")
+            .addClass("is-danger");
+          $("#input-username").focus();
+          return;
+        }
+        $("#help-id").addClass("is-loading");
+        $.ajax({
+          type: "POST",
+          url: "/sign_up/check_dup",
+          data: {
+            username_give: username,
+          },
+          success: function (response) {
+            if (response["exists"]) {
+              $("#help-id")
+                .text("This id is already in use.")
+                .removeClass("is-safe")
+                .addClass("is-danger");
+              $("#input-username").focus();
+            } else {
+              $("#help-id")
+                .text("This id is available!")
+                .removeClass("is-danger")
+                .addClass("is-success");
+            }
+            $("#help-id").removeClass("is-loading");
+          },
+        });
+      }
+    </script>
+  </head>
+  <body></body>
+</html>
